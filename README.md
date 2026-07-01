@@ -1,3 +1,13 @@
+---
+title: SHL Assessment Recommender
+emoji: 🤖
+colorFrom: blue
+colorTo: purple
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # SHL Assessment Recommender
 
 Production-ready conversational recommender for SHL Individual Test Solutions, built with a custom conversation engine, lightweight BM25 retrieval, and Gemini 2.5 Flash.
