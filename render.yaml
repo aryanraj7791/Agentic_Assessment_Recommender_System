@@ -23,3 +23,7 @@ services:
         value: "true"
       - key: CORS_ORIGINS
         value: https://your-app.netlify.app,http://localhost:5173
+      - key: MAX_RECOMMENDATIONS
+        value: "10"
+      - key: LOG_LEVEL
+        value: INFO
