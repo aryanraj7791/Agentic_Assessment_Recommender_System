@@ -13,10 +13,10 @@ class Settings(BaseSettings):
 
     catalog_path: str = "data/shl_product_catalog.json"
     chroma_path: str = "data/chroma"
-    embedding_model: str = "BAAI/bge-large-en-v1.5"
+    embedding_model: str = "BAAI/bge-small-en-v1.5"
     embedding_fallback_model: str = "BAAI/bge-small-en-v1.5"
     use_reranker: bool = True
-    reranker_model: str = "BAAI/bge-reranker-base"
+    reranker_model: str = "BAAI/bge-reranker-small"
 
     max_recommendations: int = 10
     log_level: str = "INFO"

@@ -17,8 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Production deps only — no torch / sentence-transformers / chromadb
-COPY requirements-prod.txt .
-RUN pip install --upgrade pip && pip install -r requirements-prod.txt
+COPY requirements.txt .
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY app ./app
 COPY data/shl_product_catalog.json ./data/shl_product_catalog.json
