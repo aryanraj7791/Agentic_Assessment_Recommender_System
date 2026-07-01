@@ -15,7 +15,7 @@ from app.conversation.state import ConversationState, reconstruct_state
 from app.conversation.validation import ResponseValidator
 from app.llm.base import LLMProvider
 from app.models import ChatMessage, ChatResponse
-from app.retrieval.chroma_store import ChromaStore
+from app.retrieval.base import Retriever
 
 SYSTEM_PROMPT = """You are an SHL assessment recommender. Only discuss SHL Individual Test Solutions.
 Write concise, professional replies. Never invent products or URLs.
@@ -27,18 +27,18 @@ class ConversationEngine:
     def __init__(
         self,
         catalog: Catalog,
-        store: ChromaStore,
+        retriever: Retriever,
         llm: LLMProvider,
         settings: Settings,
     ):
         self.catalog = catalog
-        self.store = store
+        self.retriever = retriever
         self.llm = llm
         self.settings = settings
         self.intent_detector = IntentDetector()
         self.constraint_extractor = ConstraintExtractor()
         self.clarification_manager = ClarificationManager()
-        self.recommendation_engine = RecommendationEngine(catalog, store)
+        self.recommendation_engine = RecommendationEngine(catalog, retriever)
         self.comparison_engine = ComparisonEngine(catalog)
         self.validator = ResponseValidator(catalog, settings.max_recommendations)
 
@@ -56,7 +56,7 @@ class ConversationEngine:
             llm_reply = await self._llm_reply(state, reply)
             return self.validator.build_response(llm_reply, [], False, include_recommendations=False)
 
-        retrieved = self.store.search(state.full_text, top_k=self.settings.max_recommendations)
+        retrieved = self.retriever.search(state.full_text, top_k=self.settings.max_recommendations)
 
         if intent == Intent.COMPARE:
             comparison = self.comparison_engine.compare(state, retrieved)

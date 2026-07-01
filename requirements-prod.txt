@@ -8,7 +8,7 @@ python-dotenv>=1.0.0
 # LLM
 google-genai>=1.0.0
 
-# Retrieval
+# Lightweight retrieval (production / Render)
 rank-bm25>=0.2.2
 
 # Data processing
@@ -29,5 +29,5 @@ black>=24.10.0
 ruff>=0.8.0
 isort>=5.13.0
 
-# Optional embedding retrieval (local dev):
+# Optional: embedding retrieval (local dev only — not installed on Render)
 # pip install -r requirements-embeddings.txt

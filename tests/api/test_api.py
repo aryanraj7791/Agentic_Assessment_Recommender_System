@@ -11,8 +11,9 @@ def setup_engine():
     settings = Settings(
         llm_provider="mock",
         use_reranker=False,
+        retrieval_mode="keyword",
+        lazy_init=False,
         catalog_path="data/shl_product_catalog.json",
-        chroma_path="data/chroma",
     )
     initialize_app(settings)
 

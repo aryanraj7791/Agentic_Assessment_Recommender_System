@@ -14,13 +14,15 @@ class Settings(BaseSettings):
     catalog_path: str = "data/shl_product_catalog.json"
     chroma_path: str = "data/chroma"
     embedding_model: str = "BAAI/bge-large-en-v1.5"
-    embedding_fallback_model: str = "BAAI/bge-base-en-v1.5"
+    embedding_fallback_model: str = "BAAI/bge-small-en-v1.5"
     use_reranker: bool = True
     reranker_model: str = "BAAI/bge-reranker-base"
 
     max_recommendations: int = 10
     log_level: str = "INFO"
     cors_origins: str = Field(default="http://localhost:5173")
+    retrieval_mode: str = Field(default="keyword")  # keyword | embedding
+    lazy_init: bool = Field(default=True)
 
     @property
     def cors_origin_list(self) -> list[str]:

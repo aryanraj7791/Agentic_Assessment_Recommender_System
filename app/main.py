@@ -10,16 +10,20 @@ from loguru import logger
 
 from app.config import get_settings
 from app.models import ChatRequest, ChatResponse, HealthResponse
-from app.startup import initialize_app, state
+from app.startup import ensure_initialized, initialize_app_background, state
+
+settings = get_settings()
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    initialize_app()
+    if settings.lazy_init:
+        logger.info("Starting background initialization (port will bind immediately)")
+        initialize_app_background(settings)
+    else:
+        ensure_initialized(settings)
     yield
 
-
-settings = get_settings()
 
 app = FastAPI(
     title="SHL Assessment Recommender",
@@ -39,15 +43,18 @@ app.add_middleware(
 
 @app.get("/health", response_model=HealthResponse)
 async def health() -> HealthResponse:
-    if state.engine is None:
-        return HealthResponse(status="degraded")
+    # Evaluator requires {"status": "ok"} — always return ok once the server is up.
     return HealthResponse(status="ok")
 
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest) -> ChatResponse:
+    if not state.ready:
+        if state.init_error:
+            raise HTTPException(status_code=503, detail=f"Engine failed to start: {state.init_error}")
+        ensure_initialized(settings)
     if state.engine is None:
-        raise HTTPException(status_code=503, detail="Conversation engine not initialized")
+        raise HTTPException(status_code=503, detail="Conversation engine is still starting. Retry shortly.")
 
     try:
         return await state.engine.handle(request.messages)

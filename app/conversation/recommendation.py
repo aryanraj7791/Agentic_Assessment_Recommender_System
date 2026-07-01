@@ -5,7 +5,7 @@ from __future__ import annotations
 from app.catalog.loader import Assessment, Catalog
 from app.conversation.constraints import HiringConstraints
 from app.conversation.state import ConversationState
-from app.retrieval.chroma_store import ChromaStore
+from app.retrieval.base import Retriever
 
 DEFAULT_PERSONALITY = "Occupational Personality Questionnaire OPQ32r"
 DEFAULT_COGNITIVE = "SHL Verify Interactive G+"
@@ -68,9 +68,9 @@ SKILL_PRODUCTS: dict[str, list[str]] = {
 
 
 class RecommendationEngine:
-    def __init__(self, catalog: Catalog, store: ChromaStore):
+    def __init__(self, catalog: Catalog, retriever: Retriever):
         self.catalog = catalog
-        self.store = store
+        self.retriever = retriever
 
     def recommend(
         self,
@@ -79,12 +79,11 @@ class RecommendationEngine:
         max_items: int = 10,
     ) -> list[Assessment]:
         names = self._rule_based_names(state, constraints)
-        retrieved = self.store.search(state.full_text, top_k=max_items)
         resolved = self.catalog.resolve_references(names)
-        combined = self._dedupe((resolved or []) + retrieved)
-        return combined[:max_items]
+        if resolved:
+            return self._dedupe(resolved)[:max_items]
 
-        retrieved = self.store.search(state.full_text, top_k=max_items)
+        retrieved = self.retriever.search(state.full_text, top_k=max_items)
         if constraints.wants_personality and DEFAULT_PERSONALITY not in [a.name for a in retrieved]:
             opq = self.catalog.get_by_name(DEFAULT_PERSONALITY)
             if opq and constraints.seniority in {"senior", "mid", "executive", "graduate"}:
