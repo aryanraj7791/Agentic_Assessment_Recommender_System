@@ -8,7 +8,7 @@ Production-ready conversational recommender for SHL Individual Test Solutions, b
 |-------|------------|
 | Backend | Python 3.11, FastAPI, Uvicorn, Pydantic v2 |
 | Frontend | React 19, Vite, TypeScript, Tailwind CSS, Axios |
-| RAG | ChromaDB, sentence-transformers, BAAI/bge-large-en-v1.5 |
+| RAG | ChromaDB, sentence-transformers, BAAI/bge-small-en-v1.5 |
 | Reranker | BAAI/bge-reranker-base (optional) |
 | LLM | Gemini 2.5 Flash via official `google-genai` SDK |
 | Data | Pandas preprocessing, BeautifulSoup4-ready scraping utilities |
