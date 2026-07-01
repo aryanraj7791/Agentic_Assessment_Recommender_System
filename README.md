@@ -130,4 +130,4 @@ docs/APPROACH.md
 
 ## Environment variables
 
-See `.env.example` for all configurable values.
+See `.env` for all configurable values.
