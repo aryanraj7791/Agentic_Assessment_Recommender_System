@@ -1,6 +1,6 @@
 # SHL Assessment Recommender
 
-Production-ready conversational recommender for SHL Individual Test Solutions, built with a custom conversation engine, ChromaDB RAG, and Gemini 2.5 Flash.
+Production-ready conversational recommender for SHL Individual Test Solutions, built with a custom conversation engine, lightweight BM25 retrieval, and Gemini 2.5 Flash.
 
 ## Stack
 
@@ -8,38 +8,44 @@ Production-ready conversational recommender for SHL Individual Test Solutions, b
 |-------|------------|
 | Backend | Python 3.11, FastAPI, Uvicorn, Pydantic v2 |
 | Frontend | React 19, Vite, TypeScript, Tailwind CSS, Axios |
-| RAG | ChromaDB, sentence-transformers, BAAI/bge-small-en-v1.5 |
-| Reranker | BAAI/bge-reranker-base (optional) |
+| RAG (prod) | BM25 keyword search (`rank-bm25`) — HF Spaces safe |
+| RAG (local) | ChromaDB + BGE embeddings (optional, `requirements-embeddings.txt`) |
 | LLM | Gemini 2.5 Flash via official `google-genai` SDK |
-| Data | Pandas preprocessing, BeautifulSoup4-ready scraping utilities |
 | Tests | pytest, pytest-asyncio, httpx |
-| Deploy | Render (API), Netlify (frontend), Docker |
+| Deploy | **Hugging Face Spaces** (API), Netlify (frontend) |
 
-## Architecture
+## Project layout
 
 ```
-User -> React UI -> POST /chat -> ConversationEngine
-                                      |
-                    +-----------------+------------------+
-                    |                 |                  |
-             IntentDetector   ConstraintExtractor   ChromaDB RAG
-                    |                 |                  |
-             ClarificationManager  RecommendationEngine  BGE Reranker
-                    |                 |                  |
-             ComparisonEngine    ResponseValidator    Gemini 2.5 Flash
+app/                  # FastAPI backend source
+  conversation/       # Custom conversation engine
+  retrieval/          # Keyword + optional ChromaDB retrieval
+  catalog/            # Loader + pandas preprocessing
+  llm/                # Gemini provider + factory
+  main.py
+app.py                # Hugging Face Spaces entrypoint shim
+data/
+  shl_product_catalog.json
+frontend/             # React chat UI (Netlify)
+space/                # HF Spaces deployment bundle
+  README.md           # Space card + YAML frontmatter
+  Dockerfile          # Standalone Space image
+  DEPLOY.md           # Step-by-step deploy guide
+  prepare_space.py    # Package script for standalone Space repo
+Dockerfile            # Root Docker image (HF Spaces monorepo deploy)
+docs/APPROACH.md
+tests/
 ```
 
-## Quick start
-
-### Backend
+## Quick start (local)
 
 ```bash
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 copy .env.example .env
-# Set GEMINI_API_KEY and optionally LLM_PROVIDER=mock for offline tests
-python scripts/build_chroma_index.py
+set LLM_PROVIDER=mock
+set RETRIEVAL_MODE=keyword
 uvicorn app.main:app --reload
 ```
 
@@ -48,10 +54,28 @@ uvicorn app.main:app --reload
 ```bash
 cd frontend
 npm install
+copy .env.example .env
 npm run dev
 ```
 
-Set `VITE_API_URL=http://localhost:8000` in `frontend/.env`.
+## Deploy backend to Hugging Face Spaces
+
+See **`space/DEPLOY.md`** for the full guide. Summary:
+
+1. Create a **Docker** Space (CPU basic — 2 GB RAM).
+2. Connect this GitHub repo (uses root `Dockerfile`).
+3. Paste YAML frontmatter from `space/README.md` into the Space README.
+4. Add secret: `GEMINI_API_KEY`.
+5. API URL: `https://YOUR-USERNAME-YOUR-SPACE.hf.space`
+
+```bash
+# Optional: package a standalone Space repo
+python space/prepare_space.py
+```
+
+## Deploy frontend to Netlify
+
+Set `VITE_API_URL` to your HF Space URL. Add that URL to backend `CORS_ORIGINS`.
 
 ## API
 
@@ -71,63 +95,14 @@ Set `VITE_API_URL=http://localhost:8000` in `frontend/.env`.
 }
 ```
 
-Response:
-
-```json
-{
-  "reply": "...",
-  "recommendations": [
-    {"name": "...", "url": "https://www.shl.com/...", "test_type": "K"}
-  ],
-  "end_of_conversation": false
-}
-```
-
 ## Testing
 
 ```bash
 set LLM_PROVIDER=mock
-set USE_RERANKER=false
+set RETRIEVAL_MODE=keyword
 pytest
-```
-
-Test categories:
-- `tests/unit/` — intent, constraints, catalog preprocessing
-- `tests/api/` — FastAPI endpoints and schema compliance
-- `tests/conversation/` — multi-turn conversation flows
-- `tests/retrieval/` — ChromaDB retrieval quality
-- `tests/schema/` — Pydantic model validation
-- `tests/integration/` — startup and initialization
-
-## Code quality
-
-```bash
-black app tests
-isort app tests
-ruff check app tests
-```
-
-## Deployment
-
-- **Backend (Render):** uses `render.yaml` + `Dockerfile`
-- **Frontend (Netlify):** uses `netlify.toml`, set `VITE_API_URL` to your Render API URL
-- Configure `CORS_ORIGINS` on the backend to include your Netlify domain
-
-## Project layout
-
-```
-app/
-  conversation/   # Custom conversation engine
-  retrieval/      # ChromaDB + embeddings + reranker
-  catalog/        # Loader + pandas preprocessing
-  llm/            # Gemini provider + factory
-  main.py
-frontend/         # React chat UI
-scripts/
-tests/
-docs/APPROACH.md
 ```
 
 ## Environment variables
 
-See `.env` for all configurable values.
+See `.env.example`.

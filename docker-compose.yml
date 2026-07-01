@@ -2,6 +2,11 @@ services:
   api:
     build: .
     ports:
-      - "8000:8000"
+      - "7860:7860"
+    environment:
+      PORT: "7860"
+      LLM_PROVIDER: mock
+      RETRIEVAL_MODE: keyword
+      LAZY_INIT: "false"
     env_file:
       - .env

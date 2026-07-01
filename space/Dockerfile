@@ -1,5 +1,5 @@
-# Hugging Face Spaces Docker image (CPU Basic: 2 vCPU, 2 GB RAM)
-# HF sets PORT=7860 automatically.
+# Standalone HF Space Dockerfile (used when space/ is its own Git repo).
+# For monorepo deployment, the root Dockerfile is used instead.
 
 FROM python:3.11-slim
 
@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements-prod.txt requirements.txt
+COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY app.py .

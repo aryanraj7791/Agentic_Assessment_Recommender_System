@@ -1,0 +1,31 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.git/
+.gitignore
+.env
+*.log
+.DS_Store
+
+# Frontend is deployed separately (Netlify)
+frontend/
+
+# Local-only artifacts
+data/chroma/
+data/index/
+data/sample_conversations/
+data/sample_conversations.zip
+
+# Docs and dev tooling (not needed in the Space image)
+docs/
+tests/
+space/
+scripts/
+render.yaml
+docker-compose.yml
+netlify.toml
+requirements-embeddings.txt
+README.md
