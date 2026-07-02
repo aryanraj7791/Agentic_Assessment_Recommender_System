@@ -42,6 +42,14 @@ SKILL_TERMS = (
     "networking",
     "financial",
     "numerical",
+    "javascript",
+    "typescript",
+    "react",
+    "node",
+    "mongodb",
+    "postgresql",
+    "git",
+    "kubernetes",
 )
 
 
