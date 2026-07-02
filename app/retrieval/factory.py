@@ -13,7 +13,7 @@ from app.retrieval.keyword_search import KeywordSearch
 def create_retriever(catalog: Catalog, settings: Settings) -> Retriever:
     mode = settings.retrieval_mode.lower()
     if mode == "keyword":
-        logger.info("Using lightweight BM25 keyword retrieval (Render-safe)")
+        logger.info("Using lightweight BM25 keyword retrieval")
         return KeywordSearch(catalog)
 
     logger.info("Using ChromaDB embedding retrieval")
