@@ -40,6 +40,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+async def root():
+    return {
+        "message": "SHL Assessment Recommender API",
+        "docs": "/docs",
+        "health": "/health"
+    }
+
 @app.get("/health", response_model=HealthResponse)
 async def health() -> HealthResponse:
     # Evaluator requires {"status": "ok"} — always return ok once the server is up.
