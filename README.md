@@ -116,3 +116,7 @@ pytest
 ## Environment variables
 
 See `.env.example`.
+
+## Live Demo
+Frontend : https://shl-assessment-recommender-system.netlify.app/
+Backend : https://evil-danger-53b-shl-assessment-recommender.hf.space
