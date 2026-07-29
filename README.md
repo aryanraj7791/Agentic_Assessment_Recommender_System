@@ -104,6 +104,7 @@ Set `VITE_API_URL` to your HF Space URL. Add that URL to backend `CORS_ORIGINS`.
   ]
 }
 ```
+---
 
 ## Testing
 
@@ -112,12 +113,27 @@ set LLM_PROVIDER=mock
 set RETRIEVAL_MODE=keyword
 pytest
 ```
+---
 
 ## Environment variables
 
 See `.env.example`.
 
+---
+
 ## Live Demo
 Frontend : https://shl-assessment-recommender-system.netlify.app/
 
 Backend : https://evil-danger-53b-shl-assessment-recommender.hf.space
+
+---
+
+## 👨‍💻 Author
+
+**Aryan Raj**
+
+- GitHub: https://github.com/aryanraj7791
+- LinkedIn: https://www.linkedin.com/in/aryan-raj-79246b280/
+- Email: aryanraj5371@gmail.com
+
+If you found this project useful, consider giving it a ⭐ on GitHub!
