@@ -1,4 +1,5 @@
 ---
+
 title: SHL Assessment Recommender
 emoji: 🤖
 colorFrom: blue
@@ -6,56 +7,147 @@ colorTo: purple
 sdk: docker
 app_port: 7860
 pinned: false
----
+-------------
 
-# SHL Assessment Recommender
+# 🤖 SHL Assessment Recommender
 
-Production-ready conversational recommender for SHL Individual Test Solutions, built with a custom conversation engine, lightweight BM25 retrieval, and Gemini 2.5 Flash.
+> A conversational AI system that recommends relevant **SHL Individual Test Solutions** based on natural-language hiring requirements.
 
-## Stack
+Built with a custom conversation engine, **BM25 retrieval**, and **Gemini 2.5 Flash**, with a lightweight architecture optimized for Hugging Face Spaces.
 
-| Layer | Technology |
-|-------|------------|
-| Backend | Python 3.11, FastAPI, Uvicorn, Pydantic v2 |
-| Frontend | React 19, Vite, TypeScript, Tailwind CSS, Axios |
-| RAG (prod) | BM25 keyword search (`rank-bm25`) — HF Spaces safe |
-| RAG (local) | ChromaDB + BGE embeddings (optional, `requirements-embeddings.txt`) |
-| LLM | Gemini 2.5 Flash via official `google-genai` SDK |
-| Tests | pytest, pytest-asyncio, httpx |
-| Deploy | **Hugging Face Spaces** (API), Netlify (frontend) |
+## ✨ Features
 
-## Project layout
+* 💬 Conversational assessment recommendations
+* 🔎 BM25 keyword-based retrieval
+* 🧠 Gemini 2.5 Flash for response generation
+* 📚 Optional ChromaDB + BGE semantic retrieval
+* ⚡ FastAPI backend
+* 🎨 React + TypeScript frontend
+* 🧪 Automated testing
+* 🐳 Docker deployment
+* ☁️ Hugging Face Spaces + Netlify deployment
 
+## 🛠️ Tech Stack
+
+| Layer        | Technologies                                    |
+| ------------ | ----------------------------------------------- |
+| Backend      | Python 3.11, FastAPI, Uvicorn, Pydantic v2      |
+| Frontend     | React 19, Vite, TypeScript, Tailwind CSS, Axios |
+| Retrieval    | BM25 (`rank-bm25`)                              |
+| Optional RAG | ChromaDB + BGE embeddings                       |
+| LLM          | Gemini 2.5 Flash (`google-genai`)               |
+| Testing      | pytest, pytest-asyncio, httpx                   |
+| Deployment   | Docker, Hugging Face Spaces, Netlify            |
+
+## 🏗️ Architecture
+
+              ```text
+              ┌──────────────────────────────────────────────┐
+              │               React Frontend                 │
+              │                                              │
+              │  React 19 • TypeScript • Tailwind CSS        │
+              │  Axios                                       │
+              └──────────────────────────────────────────────┘
+                                    │
+                                    │ HTTP
+                                    │
+              ┌──────────────────────────────────────────────┐
+              │                 FastAPI API                  │
+              │                                              │
+              │  /health                                     │
+              │  /chat                                       │
+              └──────────────────────────────────────────────┘
+                                    │
+                                    │
+              ┌──────────────────────────────────────────────┐
+              │             Conversation Engine              │
+              │                                              │
+              │  • Context Management                        │
+              │  • Query Processing                          │
+              │  • Recommendation Flow                       │
+              └──────────────────────────────────────────────┘
+                                    │
+                            ┌───────┴────────┐
+                            │                │
+                            │                │
+              ┌────────────────────────┐  ┌────────────────────────┐
+              │         BM25           │  │       ChromaDB         │
+              │                        │  │                        │
+              │  Keyword Retrieval     │  │  BGE Embeddings        │
+              │                        │  │  Semantic Retrieval    │
+              │     Production         │  │       Optional         │
+              └────────────────────────┘  └────────────────────────┘
+                            │                 │
+                            └────────┬────────┘
+                                     │
+              ┌──────────────────────────────────────────────┐
+              │              Gemini 2.5 Flash                │
+              │                                              │
+              │  • Response Generation                       │
+              │  • Recommendation Synthesis                  │
+              └──────────────────────────────────────────────┘
+                                    │
+                                    │
+              ┌──────────────────────────────────────────────┐
+              │          Assessment Recommendations          │
+              │                                              │
+              │  Relevant SHL Assessments + Contextual       │
+              │  Recommendations                             │
+              └──────────────────────────────────────────────┘
+              ```
+## 📁 Project Structure
+
+```text
+Agentic_Assessment_Recommender_System/
+├── app/
+│   ├── conversation/     # Conversation engine
+│   ├── retrieval/        # BM25 + semantic retrieval
+│   ├── catalog/          # SHL catalog
+│   ├── llm/              # Gemini integration
+│   └── main.py           # FastAPI app
+├── data/                 # Assessment catalog
+├── frontend/             # React frontend
+├── docs/                 # Documentation
+├── space/                # HF Spaces deployment
+├── tests/                # Test suite
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── requirements-prod.txt
+└── requirements-embeddings.txt
 ```
-app/                  # FastAPI backend source
-  conversation/       # Custom conversation engine
-  retrieval/          # Keyword + optional ChromaDB retrieval
-  catalog/            # Loader + pandas preprocessing
-  llm/                # Gemini provider + factory
-  main.py
-app.py                # Hugging Face Spaces entrypoint shim
-data/
-  shl_product_catalog.json
-frontend/             # React chat UI (Netlify)
-space/                # HF Spaces deployment bundle
-  README.md           # Space card + YAML frontmatter
-  Dockerfile          # Standalone Space image
-  DEPLOY.md           # Step-by-step deploy guide
-  prepare_space.py    # Package script for standalone Space repo
-Dockerfile            # Root Docker image (HF Spaces monorepo deploy)
-docs/APPROACH.md
-tests/
-```
 
-## Quick start (local)
+## 🔄 How It Works
+
+1. **User describes** a hiring requirement in natural language.
+2. **Conversation engine** processes the request and maintains context.
+3. **BM25 retrieval** finds relevant assessments from the SHL catalog.
+4. **Gemini 2.5 Flash** generates a contextual recommendation from the retrieved results.
+5. **Recommendations** are returned through the conversational interface.
+
+For local experimentation, semantic retrieval using **BGE embeddings + ChromaDB** is also supported.
+
+## 🚀 Local Setup
+
+### Backend
 
 ```bash
+git clone https://github.com/aryanraj7791/Agentic_Assessment_Recommender_System.git
+cd Agentic_Assessment_Recommender_System
+
 python -m venv .venv
+```
+
+**Windows:**
+
+```powershell
 .venv\Scripts\activate
 pip install -r requirements.txt
-copy .env.example .env
-set LLM_PROVIDER=mock
-set RETRIEVAL_MODE=keyword
+```
+
+Configure `.env` using `.env.example`, then run:
+
+```bash
 uvicorn app.main:app --reload
 ```
 
@@ -64,76 +156,108 @@ uvicorn app.main:app --reload
 ```bash
 cd frontend
 npm install
-copy .env.example .env
 npm run dev
 ```
 
-## Deploy backend to Hugging Face Spaces
+Set the backend URL in `.env`:
 
-See **`space/DEPLOY.md`** for the full guide. Summary:
-
-1. Create a **Docker** Space (CPU basic — 2 GB RAM).
-2. Connect this GitHub repo (uses root `Dockerfile`).
-3. Paste YAML frontmatter from `space/README.md` into the Space README.
-4. Add secret: `GEMINI_API_KEY`.
-5. API URL: `https://YOUR-USERNAME-YOUR-SPACE.hf.space`
-
-```bash
-# Optional: package a standalone Space repo
-python space/prepare_space.py
+```env
+VITE_API_URL=http://127.0.0.1:8000
 ```
 
-## Deploy frontend to Netlify
+## 🔌 API
 
-Set `VITE_API_URL` to your HF Space URL. Add that URL to backend `CORS_ORIGINS`.
+### Health Check
 
-## API
-
-### `GET /health`
+```http
+GET /health
+```
 
 ```json
-{"status": "ok"}
+{
+  "status": "ok"
+}
 ```
 
-### `POST /chat`
+### Chat
+
+```http
+POST /chat
+```
 
 ```json
 {
   "messages": [
-    {"role": "user", "content": "Hiring a mid-level Java developer with Spring experience"}
+    {
+      "role": "user",
+      "content": "Hiring a mid-level Java developer with Spring experience"
+    }
   ]
 }
 ```
----
 
-## Testing
+## 🧪 Testing
 
 ```bash
-set LLM_PROVIDER=mock
-set RETRIEVAL_MODE=keyword
 pytest
 ```
----
 
-## Environment variables
+For tests without external LLM calls:
 
-See `.env.example`.
+```text
+LLM_PROVIDER=mock
+RETRIEVAL_MODE=keyword
+```
 
----
+## ☁️ Deployment
 
-## Live Demo
-Frontend : https://shl-assessment-recommender-system.netlify.app/
+### Backend
 
-Backend : https://evil-danger-53b-shl-assessment-recommender.hf.space
+Dockerized backend deployed on **Hugging Face Spaces**.
 
----
+See:
 
-## 👨‍💻 Author
+```text
+space/DEPLOY.md
+```
+
+Required secret:
+
+```text
+GEMINI_API_KEY
+```
+
+### Frontend
+
+React frontend deployed on **Netlify**.
+
+Set:
+
+```text
+VITE_API_URL=<YOUR_HUGGING_FACE_SPACE_URL>
+```
+
+## 🌐 Live Demo
+
+**Frontend:**
+https://shl-assessment-recommender-system.netlify.app/
+
+**Backend:**
+https://evil-danger-53b-shl-assessment-recommender.hf.space
+
+## 📚 Documentation
+
+* `docs/APPROACH.md` — Technical approach
+* `space/DEPLOY.md` — Deployment guide
+* `.env.example` — Environment configuration
+
+## 👨‍💻 Connect with me
 
 **Aryan Raj**
 
-- GitHub: https://github.com/aryanraj7791
-- LinkedIn: https://www.linkedin.com/in/aryan-raj-79246b280/
-- Email: aryanraj5371@gmail.com
+* GitHub: https://github.com/aryanraj7791
+* LinkedIn: https://www.linkedin.com/in/aryan-raj-79246b280/
+* Email: [aryanraj5371@gmail.com](mailto:aryanraj5371@gmail.com)
 
-If you found this project useful, consider giving it a ⭐ on GitHub!
+⭐ If you find this project useful, consider giving it a star!
+
