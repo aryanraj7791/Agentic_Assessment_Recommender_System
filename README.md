@@ -1,3 +1,12 @@
+---
+title: SHL Assessment Recommender
+emoji: 🤖
+colorFrom: blue
+colorTo: purple
+sdk: docker
+app_port: 7860
+pinned: false
+---
 
 # 🤖 SHL Assessment Recommender
 
@@ -7,84 +16,84 @@ Built with a custom conversation engine, **BM25 retrieval**, and **Gemini 2.5 Fl
 
 ## ✨ Features
 
-* 💬 Conversational assessment recommendations
-* 🔎 BM25 keyword-based retrieval
-* 🧠 Gemini 2.5 Flash for response generation
-* 📚 Optional ChromaDB + BGE semantic retrieval
-* ⚡ FastAPI backend
-* 🎨 React + TypeScript frontend
-* 🧪 Automated testing
-* 🐳 Docker deployment
-* ☁️ Hugging Face Spaces + Netlify deployment
+- 💬 Conversational assessment recommendations
+- 🔎 BM25 keyword-based retrieval
+- 🧠 Gemini 2.5 Flash for response generation
+- 📚 Optional ChromaDB + BGE semantic retrieval
+- ⚡ FastAPI backend
+- 🎨 React + TypeScript frontend
+- 🧪 Automated testing
+- 🐳 Docker deployment
+- ☁️ Hugging Face Spaces + Netlify deployment
 
 ## 🛠️ Tech Stack
 
-| Layer        | Technologies                                    |
-| ------------ | ----------------------------------------------- |
-| Backend      | Python 3.11, FastAPI, Uvicorn, Pydantic v2      |
-| Frontend     | React 19, Vite, TypeScript, Tailwind CSS, Axios |
-| Retrieval    | BM25 (`rank-bm25`)                              |
-| Optional RAG | ChromaDB + BGE embeddings                       |
-| LLM          | Gemini 2.5 Flash (`google-genai`)               |
-| Testing      | pytest, pytest-asyncio, httpx                   |
-| Deployment   | Docker, Hugging Face Spaces, Netlify            |
+| Layer | Technologies |
+|---|---|
+| Backend | Python 3.11, FastAPI, Uvicorn, Pydantic v2 |
+| Frontend | React 19, Vite, TypeScript, Tailwind CSS, Axios |
+| Retrieval | BM25 (`rank-bm25`) |
+| Optional RAG | ChromaDB + BGE embeddings |
+| LLM | Gemini 2.5 Flash (`google-genai`) |
+| Testing | pytest, pytest-asyncio, httpx |
+| Deployment | Docker, Hugging Face Spaces, Netlify |
 
 ## 🏗️ Architecture
 
-              ```text
-              ┌──────────────────────────────────────────────┐
-              │               React Frontend                 │
-              │                                              │
-              │  React 19 • TypeScript • Tailwind CSS        │
-              │  Axios                                       │
-              └──────────────────────────────────────────────┘
-                                    │
-                                    │ HTTP
-                                    │
-              ┌──────────────────────────────────────────────┐
-              │                 FastAPI API                  │
-              │                                              │
-              │  /health                                     │
-              │  /chat                                       │
-              └──────────────────────────────────────────────┘
-                                    │
-                                    │
-              ┌──────────────────────────────────────────────┐
-              │             Conversation Engine              │
-              │                                              │
-              │  • Context Management                        │
-              │  • Query Processing                          │
-              │  • Recommendation Flow                       │
-              └──────────────────────────────────────────────┘
-                                    │
-                            ┌───────┴────────┐
-                            │                │
-                            │                │
-              ┌────────────────────────┐  ┌────────────────────────┐
-              │         BM25           │  │       ChromaDB         │
-              │                        │  │                        │
-              │  Keyword Retrieval     │  │  BGE Embeddings        │
-              │                        │  │  Semantic Retrieval    │
-              │     Production         │  │       Optional         │
-              └────────────────────────┘  └────────────────────────┘
-                            │                 │
-                            └────────┬────────┘
-                                     │
-              ┌──────────────────────────────────────────────┐
-              │              Gemini 2.5 Flash                │
-              │                                              │
-              │  • Response Generation                       │
-              │  • Recommendation Synthesis                  │
-              └──────────────────────────────────────────────┘
-                                    │
-                                    │
-              ┌──────────────────────────────────────────────┐
-              │          Assessment Recommendations          │
-              │                                              │
-              │  Relevant SHL Assessments + Contextual       │
-              │  Recommendations                             │
-              └──────────────────────────────────────────────┘
-              ```
+```text
+┌──────────────────────────────────────────────┐
+│               React Frontend                 │
+│                                              │
+│  React 19 • TypeScript • Tailwind CSS        │
+│  Axios                                       │
+└──────────────────────────────────────────────┘
+                       │
+                       │ HTTP
+                       │
+┌──────────────────────────────────────────────┐
+│                 FastAPI API                  │
+│                                              │
+│  /health                                     │
+│  /chat                                       │
+└──────────────────────────────────────────────┘
+                       │
+                       │
+┌──────────────────────────────────────────────┐
+│             Conversation Engine              │
+│                                              │
+│  • Context Management                        │
+│  • Query Processing                          │
+│  • Recommendation Flow                       │
+└──────────────────────────────────────────────┘
+                       │
+                ┌──────┴──────┐
+                │             │
+┌────────────────────────┐  ┌────────────────────────┐
+│         BM25           │  │       ChromaDB         │
+│                        │  │                        │
+│  Keyword Retrieval     │  │  BGE Embeddings        │
+│      Production        │  │  Semantic Retrieval    │
+│                        │  │       Optional         │
+└────────────────────────┘  └────────────────────────┘
+                │             │
+                └──────┬──────┘
+                       │
+┌──────────────────────────────────────────────┐
+│              Gemini 2.5 Flash                │
+│                                              │
+│  • Response Generation                       │
+│  • Recommendation Synthesis                  │
+└──────────────────────────────────────────────┘
+                       │
+                       │
+┌──────────────────────────────────────────────┐
+│          Assessment Recommendations          │
+│                                              │
+│  Relevant SHL Assessments + Contextual       │
+│  Recommendations                             │
+└──────────────────────────────────────────────┘
+```
+
 ## 📁 Project Structure
 
 ```text
@@ -229,25 +238,25 @@ VITE_API_URL=<YOUR_HUGGING_FACE_SPACE_URL>
 
 ## 🌐 Live Demo
 
-**Frontend:**
+**Frontend:**  
 https://shl-assessment-recommender-system.netlify.app/
 
-**Backend:**
+**Backend:**  
 https://evil-danger-53b-shl-assessment-recommender.hf.space
 
 ## 📚 Documentation
 
-* `docs/APPROACH.md` — Technical approach
-* `space/DEPLOY.md` — Deployment guide
-* `.env.example` — Environment configuration
+- `docs/APPROACH.md` — Technical approach
+- `space/DEPLOY.md` — Deployment guide
+- `.env.example` — Environment configuration
 
 ## 👨‍💻 Connect with me
 
 **Aryan Raj**
 
-* GitHub: https://github.com/aryanraj7791
-* LinkedIn: https://www.linkedin.com/in/aryan-raj-79246b280/
-* Email: [aryanraj5371@gmail.com](mailto:aryanraj5371@gmail.com)
+- GitHub: https://github.com/aryanraj7791
+- LinkedIn: https://www.linkedin.com/in/aryan-raj-79246b280/
+- Email: aryanraj5371@gmail.com
 
 ⭐ If you find this project useful, consider giving it a star!
 
